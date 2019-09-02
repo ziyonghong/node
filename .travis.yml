@@ -45,8 +45,7 @@ jobs:
       install: *ccache-setup-steps
       script:
         - pyenv global ${PYTHON3_VERSION}
-        # - ./configure  # workaround pending #25878
-        - python3 configure.py
+        - ./configure
         - make -j2 -C out V=1 v8
 
     - name: "Compile Node.js (py2)"
@@ -76,8 +75,7 @@ jobs:
       install: *ccache-setup-steps
       script:
         - pyenv global ${PYTHON3_VERSION}
-        # - ./configure  # workaround pending #25878
-        - python3 configure.py
+        - ./configure
         - make -j2 V=1
         - cp out/Release/node ${PYTHON3_CACHE}
         - cp out/Release/cctest ${PYTHON3_CACHE}
