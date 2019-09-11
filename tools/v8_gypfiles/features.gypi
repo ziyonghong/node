@@ -129,7 +129,7 @@
 
     # Enable pointer compression (sets -dV8_COMPRESS_POINTERS).
     'v8_enable_pointer_compression%': 0,
-    'v8_enable_31bit_smis_on_64bit_arch%': 0,
+    'v8_enable_31bit_smis_on_64bit_arch%': 1,
 
     # Sets -dOBJECT_PRINT.
     'v8_enable_object_print%': 0,

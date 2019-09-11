@@ -59,9 +59,13 @@
       "<(V8_ROOT)/src/builtins/proxy-set-prototype-of.tq",
       "<(V8_ROOT)/src/builtins/proxy.tq",
       "<(V8_ROOT)/src/builtins/reflect.tq",
+      "<(V8_ROOT)/src/builtins/regexp-exec.tq",
+      "<(V8_ROOT)/src/builtins/regexp-match-all.tq",
       "<(V8_ROOT)/src/builtins/regexp-match.tq",
       "<(V8_ROOT)/src/builtins/regexp-replace.tq",
+      "<(V8_ROOT)/src/builtins/regexp-search.tq",
       "<(V8_ROOT)/src/builtins/regexp-source.tq",
+      "<(V8_ROOT)/src/builtins/regexp-split.tq",
       "<(V8_ROOT)/src/builtins/regexp-test.tq",
       "<(V8_ROOT)/src/builtins/regexp.tq",
       "<(V8_ROOT)/src/builtins/string.tq",
@@ -131,6 +135,7 @@
           ],
           'outputs': [
             '<(torque_output_root)/torque-generated/builtin-definitions-tq.h',
+            '<(torque_output_root)/torque-generated/interface-descriptors-tq.inc',
             '<(torque_output_root)/torque-generated/field-offsets-tq.h',
             '<(torque_output_root)/torque-generated/class-verifiers-tq.cc',
             '<(torque_output_root)/torque-generated/class-verifiers-tq.h',
@@ -428,7 +433,6 @@
           'message': 'generating: >@(_outputs)',
           'variables': {
             'mksnapshot_flags': [
-              '--turbo_instruction_scheduling',
               # In cross builds, the snapshot may be generated for both the host and
               # target toolchains.  The same host binary is used to generate both, so
               # mksnapshot needs to know which target OS to use at runtime.  It's weird,

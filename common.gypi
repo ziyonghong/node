@@ -76,6 +76,9 @@
     # TODO(refack): make v8-perfetto happen
     'v8_use_perfetto': 0,
 
+    'v8_enable_pointer_compression': 0,
+    'v8_enable_31bit_smis_on_64bit_arch': 1,
+
     ##### end V8 defaults #####
 
     'conditions': [
@@ -333,6 +336,12 @@
             'xcode_settings': {'OTHER_LDFLAGS': ['-fsanitize=address']},
           }],
         ],
+      }],
+      ['v8_enable_pointer_compression == 1', {
+        'defines': ['V8_COMPRESS_POINTERS'],
+      }],
+      ['v8_enable_pointer_compression == 1 or v8_enable_31bit_smis_on_64bit_arch == 1', {
+        'defines': ['V8_31BIT_SMIS_ON_64BIT_ARCH'],
       }],
       ['OS == "win"', {
         'defines': [
