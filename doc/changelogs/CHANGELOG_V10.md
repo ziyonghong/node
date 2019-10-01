@@ -55,6 +55,32 @@
   * [io.js](CHANGELOG_IOJS.md)
   * [Archive](CHANGELOG_ARCHIVE.md)
 
+<a id="10.17.0"></a>
+## 2019-10-22, Version 10.17.0 'Dubnium' (LTS), @BethGriggs
+
+### Notable changes
+
+### Commits
+
+* [[`7735824d2c`](https://github.com/nodejs/node/commit/7735824d2c)] - **(SEMVER-MINOR)** **crypto**: increase maxmem range from 32 to 53 bits (Tobias Nießen) [#28799](https://github.com/nodejs/node/pull/28799)
+* [[`7f48519413`](https://github.com/nodejs/node/commit/7f48519413)] - **deps**: do not link against librt (Sam Roberts) [#29729](https://github.com/nodejs/node/pull/29729)
+* [[`c285e694e2`](https://github.com/nodejs/node/commit/c285e694e2)] - **doc**: fix the links tls default version sections (Chetan Karande) [#28827](https://github.com/nodejs/node/pull/28827)
+* [[`cef5010135`](https://github.com/nodejs/node/commit/cef5010135)] - **doc**: describe tls.DEFAULT\_MIN\_VERSION/\_MAX\_VERSION (Chetan Karande) [#28827](https://github.com/nodejs/node/pull/28827)
+* [[`15c2eb0e58`](https://github.com/nodejs/node/commit/15c2eb0e58)] - **doc**: update N-API version matrix (Gabriel Schulhof) [#29461](https://github.com/nodejs/node/pull/29461)
+* [[`a3eda2896d`](https://github.com/nodejs/node/commit/a3eda2896d)] - **doc**: fixup changelog for v10.16.3 (Andrew Hughes) [#29159](https://github.com/nodejs/node/pull/29159)
+* [[`56a834a53f`](https://github.com/nodejs/node/commit/56a834a53f)] - **doc,test**: clarify that Http2Stream is destroyed after data is read (Alba Mendez) [#27891](https://github.com/nodejs/node/pull/27891)
+* [[`ccf2823f83`](https://github.com/nodejs/node/commit/ccf2823f83)] - **(SEMVER-MINOR)** **http**: makes response.writeHead return the response (Mark S. Everitt) [#25974](https://github.com/nodejs/node/pull/25974)
+* [[`925849650b`](https://github.com/nodejs/node/commit/925849650b)] - **(SEMVER-MINOR)** **http2**: makes response.writeHead return the response (Mark S. Everitt) [#25974](https://github.com/nodejs/node/pull/25974)
+* [[`69b0212df3`](https://github.com/nodejs/node/commit/69b0212df3)] - **http2**: do not start reading after write if new write is on wire (Anna Henningsen) [#29399](https://github.com/nodejs/node/pull/29399)
+* [[`36a0e9a063`](https://github.com/nodejs/node/commit/36a0e9a063)] - **http2**: do not crash on stream listener removal w/ destroyed session (Anna Henningsen) [#29459](https://github.com/nodejs/node/pull/29459)
+* [[`c74c6a5ccf`](https://github.com/nodejs/node/commit/c74c6a5ccf)] - **n-api**: mark version 5 N-APIs as stable (Gabriel Schulhof) [#29401](https://github.com/nodejs/node/pull/29401)
+* [[`f8622762e3`](https://github.com/nodejs/node/commit/f8622762e3)] - **(SEMVER-MINOR)** **n-api**: make func argument of napi\_create\_threadsafe\_function optional (legendecas) [#27791](https://github.com/nodejs/node/pull/27791)
+* [[`4f41e4f471`](https://github.com/nodejs/node/commit/4f41e4f471)] - **(SEMVER-MINOR)** **n-api**: implement date object (Jarrod Connolly) [#25917](https://github.com/nodejs/node/pull/25917)
+* [[`859d47593e`](https://github.com/nodejs/node/commit/859d47593e)] - **src**: reduce platform worker barrier lifetime (Ali Ijaz Sheikh) [#23419](https://github.com/nodejs/node/pull/23419)
+* [[`f78ecc3f93`](https://github.com/nodejs/node/commit/f78ecc3f93)] - **test**: fix race in test-http2-origin (Alba Mendez) [#28903](https://github.com/nodejs/node/pull/28903)
+* [[`2afbb3efab`](https://github.com/nodejs/node/commit/2afbb3efab)] - **test,win**: cleanup exec-timeout processes (João Reis) [#28723](https://github.com/nodejs/node/pull/28723)
+* [[`fe58bca878`](https://github.com/nodejs/node/commit/fe58bca878)] - **tls**: group chunks into TLS segments (Alba Mendez) [#27861](https://github.com/nodejs/node/pull/27861)
+
 <a id="10.16.3"></a>
 ## 2019-08-15, Version 10.16.3 'Dubnium' (LTS), @BethGriggs
 
