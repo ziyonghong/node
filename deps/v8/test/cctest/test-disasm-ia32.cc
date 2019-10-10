@@ -435,6 +435,8 @@ TEST(DisasmIa320) {
     __ maxps(xmm1, Operand(ebx, ecx, times_4, 10000));
     __ rcpps(xmm1, xmm0);
     __ rcpps(xmm1, Operand(ebx, ecx, times_4, 10000));
+    __ sqrtps(xmm1, xmm0);
+    __ sqrtps(xmm1, Operand(ebx, ecx, times_4, 10000));
     __ rsqrtps(xmm1, xmm0);
     __ rsqrtps(xmm1, Operand(ebx, ecx, times_4, 10000));
 
@@ -490,6 +492,34 @@ TEST(DisasmIa320) {
     __ cmpltsd(xmm0, xmm1);
 
     __ andpd(xmm0, xmm1);
+    __ andpd(xmm0, Operand(ebx, ecx, times_4, 10000));
+    __ andnpd(xmm0, xmm1);
+    __ andnpd(xmm0, Operand(ebx, ecx, times_4, 10000));
+    __ orpd(xmm0, xmm1);
+    __ orpd(xmm0, Operand(ebx, ecx, times_4, 10000));
+    __ xorpd(xmm0, xmm1);
+    __ xorpd(xmm0, Operand(ebx, ecx, times_4, 10000));
+    __ addpd(xmm1, xmm0);
+    __ addpd(xmm1, Operand(ebx, ecx, times_4, 10000));
+    __ subpd(xmm1, xmm0);
+    __ subpd(xmm1, Operand(ebx, ecx, times_4, 10000));
+    __ mulpd(xmm1, xmm0);
+    __ mulpd(xmm1, Operand(ebx, ecx, times_4, 10000));
+    __ divpd(xmm1, xmm0);
+    __ divpd(xmm1, Operand(ebx, ecx, times_4, 10000));
+    __ minpd(xmm1, xmm0);
+    __ minpd(xmm1, Operand(ebx, ecx, times_4, 10000));
+    __ maxpd(xmm1, xmm0);
+    __ maxpd(xmm1, Operand(ebx, ecx, times_4, 10000));
+
+    __ cmpeqpd(xmm5, xmm1);
+    __ cmpeqpd(xmm5, Operand(ebx, ecx, times_4, 10000));
+    __ cmpltpd(xmm5, xmm1);
+    __ cmpltpd(xmm5, Operand(ebx, ecx, times_4, 10000));
+    __ cmplepd(xmm5, xmm1);
+    __ cmplepd(xmm5, Operand(ebx, ecx, times_4, 10000));
+    __ cmpneqpd(xmm5, xmm1);
+    __ cmpneqpd(xmm5, Operand(ebx, ecx, times_4, 10000));
 
     __ psllw(xmm0, 17);
     __ pslld(xmm0, 17);
@@ -623,6 +653,8 @@ TEST(DisasmIa320) {
       __ vandps(xmm0, xmm1, Operand(ebx, ecx, times_4, 10000));
       __ vandnps(xmm0, xmm1, xmm2);
       __ vandnps(xmm0, xmm1, Operand(ebx, ecx, times_4, 10000));
+      __ vorps(xmm0, xmm1, xmm2);
+      __ vorps(xmm0, xmm1, Operand(ebx, ecx, times_4, 10000));
       __ vxorps(xmm0, xmm1, xmm2);
       __ vxorps(xmm0, xmm1, Operand(ebx, ecx, times_4, 10000));
       __ vaddps(xmm0, xmm1, xmm2);
@@ -639,6 +671,8 @@ TEST(DisasmIa320) {
       __ vmaxps(xmm0, xmm1, Operand(ebx, ecx, times_4, 10000));
       __ vrcpps(xmm1, xmm0);
       __ vrcpps(xmm1, Operand(ebx, ecx, times_4, 10000));
+      __ vsqrtps(xmm1, xmm0);
+      __ vsqrtps(xmm1, Operand(ebx, ecx, times_4, 10000));
       __ vrsqrtps(xmm1, xmm0);
       __ vrsqrtps(xmm1, Operand(ebx, ecx, times_4, 10000));
       __ vmovaps(xmm0, xmm1);
@@ -658,6 +692,10 @@ TEST(DisasmIa320) {
 
       __ vandpd(xmm0, xmm1, xmm2);
       __ vandpd(xmm0, xmm1, Operand(ebx, ecx, times_4, 10000));
+      __ vandnpd(xmm0, xmm1, xmm2);
+      __ vandnpd(xmm0, xmm1, Operand(ebx, ecx, times_4, 10000));
+      __ vorpd(xmm0, xmm1, xmm2);
+      __ vorpd(xmm0, xmm1, Operand(ebx, ecx, times_4, 10000));
       __ vxorpd(xmm0, xmm1, xmm2);
       __ vxorpd(xmm0, xmm1, Operand(ebx, ecx, times_4, 10000));
       __ vaddpd(xmm0, xmm1, xmm2);
@@ -672,6 +710,15 @@ TEST(DisasmIa320) {
       __ vdivpd(xmm0, xmm1, Operand(ebx, ecx, times_4, 10000));
       __ vmaxpd(xmm0, xmm1, xmm2);
       __ vmaxpd(xmm0, xmm1, Operand(ebx, ecx, times_4, 10000));
+
+      __ vcmpeqpd(xmm5, xmm4, xmm1);
+      __ vcmpeqpd(xmm5, xmm4, Operand(ebx, ecx, times_4, 10000));
+      __ vcmpltpd(xmm5, xmm4, xmm1);
+      __ vcmpltpd(xmm5, xmm4, Operand(ebx, ecx, times_4, 10000));
+      __ vcmplepd(xmm5, xmm4, xmm1);
+      __ vcmplepd(xmm5, xmm4, Operand(ebx, ecx, times_4, 10000));
+      __ vcmpneqpd(xmm5, xmm4, xmm1);
+      __ vcmpneqpd(xmm5, xmm4, Operand(ebx, ecx, times_4, 10000));
 
       __ vpsllw(xmm0, xmm7, 21);
       __ vpslld(xmm0, xmm7, 21);

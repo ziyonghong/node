@@ -287,8 +287,8 @@ class WasmGraphBuilder {
 
   Node* Invert(Node* node);
 
-  Node* GetGlobal(uint32_t index);
-  Node* SetGlobal(uint32_t index, Node* val);
+  Node* GlobalGet(uint32_t index);
+  Node* GlobalSet(uint32_t index, Node* val);
   Node* TableGet(uint32_t table_index, Node* index,
                  wasm::WasmCodePosition position);
   Node* TableSet(uint32_t table_index, Node* index, Node* val,
@@ -574,11 +574,14 @@ class WasmGraphBuilder {
                        MachineType result_type, wasm::TrapReason trap_zero,
                        wasm::WasmCodePosition position);
 
+  Node* BuildTruncateIntPtrToInt32(Node* value);
   Node* BuildChangeInt32ToIntPtr(Node* value);
   Node* BuildChangeInt32ToSmi(Node* value);
   Node* BuildChangeUint31ToSmi(Node* value);
   Node* BuildSmiShiftBitsConstant();
+  Node* BuildSmiShiftBitsConstant32();
   Node* BuildChangeSmiToInt32(Node* value);
+  Node* BuildChangeSmiToIntPtr(Node* value);
   // generates {index > max ? Smi(max) : Smi(index)}
   Node* BuildConvertUint32ToSmiWithSaturation(Node* index, uint32_t maxval);
 
@@ -598,6 +601,9 @@ class WasmGraphBuilder {
                                       Node* value);
   Node* BuildDecodeException32BitValue(Node* values_array, uint32_t* index);
   Node* BuildDecodeException64BitValue(Node* values_array, uint32_t* index);
+
+  Node* BuildMultiReturnFixedArrayFromIterable(const wasm::FunctionSig* sig,
+                                               Node* iterable, Node* context);
 
   Vector<Node*> Realloc(Node* const* buffer, size_t old_count,
                         size_t new_count) {

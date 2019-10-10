@@ -2,9 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "src/base/adapters.h"
 #include "src/base/bits.h"
 #include "src/base/enum-set.h"
+#include "src/base/iterator.h"
 #include "src/compiler/backend/instruction-selector-impl.h"
 #include "src/compiler/node-matchers.h"
 #include "src/compiler/node-properties.h"
@@ -94,7 +94,7 @@ void VisitRRR(InstructionSelector* selector, ArchOpcode opcode, Node* node) {
 void VisitSimdShiftRRR(InstructionSelector* selector, ArchOpcode opcode,
                        Node* node) {
   ArmOperandGenerator g(selector);
-  InstructionOperand temps[] = {g.TempSimd128Register()};
+  InstructionOperand temps[] = {g.TempSimd128Register(), g.TempRegister()};
   selector->Emit(opcode, g.DefineAsRegister(node),
                  g.UseRegister(node->InputAt(0)),
                  g.UseRegister(node->InputAt(1)), arraysize(temps), temps);
@@ -942,7 +942,8 @@ void InstructionSelector::VisitWord32Shr(Node* node) {
     uint32_t lsb = m.right().Value();
     Int32BinopMatcher mleft(m.left().node());
     if (mleft.right().HasValue()) {
-      uint32_t value = (mleft.right().Value() >> lsb) << lsb;
+      uint32_t value = static_cast<uint32_t>(mleft.right().Value() >> lsb)
+                       << lsb;
       uint32_t width = base::bits::CountPopulation(value);
       uint32_t msb = base::bits::CountLeadingZeros32(value);
       if ((width != 0) && (msb + width + lsb == 32)) {
@@ -1117,6 +1118,10 @@ void InstructionSelector::VisitWord64ReverseBytes(Node* node) { UNREACHABLE(); }
 
 void InstructionSelector::VisitWord32ReverseBytes(Node* node) {
   VisitRR(this, kArmRev, node);
+}
+
+void InstructionSelector::VisitSimd128ReverseBytes(Node* node) {
+  UNREACHABLE();
 }
 
 void InstructionSelector::VisitWord32Popcnt(Node* node) { UNREACHABLE(); }
@@ -2512,6 +2517,14 @@ SIMD_SHIFT_OP_LIST(SIMD_VISIT_SHIFT_OP)
 SIMD_BINOP_LIST(SIMD_VISIT_BINOP)
 #undef SIMD_VISIT_BINOP
 #undef SIMD_BINOP_LIST
+
+void InstructionSelector::VisitF32x4Sqrt(Node* node) {
+  ArmOperandGenerator g(this);
+  // Use fixed registers in the lower 8 Q-registers so we can directly access
+  // mapped registers S0-S31.
+  Emit(kArmF32x4Sqrt, g.DefineAsFixed(node, q0),
+       g.UseFixed(node->InputAt(0), q0));
+}
 
 void InstructionSelector::VisitF32x4Div(Node* node) {
   ArmOperandGenerator g(this);

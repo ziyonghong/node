@@ -1039,7 +1039,7 @@ void Debug::PrepareStep(StepAction step_action) {
       // and deoptimize every frame along the way.
       bool in_current_frame = true;
       for (; !frames_it.done(); frames_it.Advance()) {
-        // TODO(clemensh): Implement stepping out from JS to wasm.
+        // TODO(clemensb): Implement stepping out from JS to wasm.
         if (frames_it.frame()->is_wasm()) continue;
         JavaScriptFrame* frame = JavaScriptFrame::cast(frames_it.frame());
         if (last_step_action() == StepIn) {
@@ -1069,7 +1069,7 @@ void Debug::PrepareStep(StepAction step_action) {
       thread_local_.target_frame_count_ = current_frame_count;
       V8_FALLTHROUGH;
     case StepIn:
-      // TODO(clemensh): Implement stepping from JS into wasm.
+      // TODO(clemensb): Implement stepping from JS into wasm.
       FloodWithOneShot(shared);
       break;
   }
@@ -1171,7 +1171,7 @@ void Debug::PrepareFunctionForDebugExecution(
   if (debug_info->flags() & DebugInfo::kPreparedForDebugExecution) return;
 
   // Make a copy of the bytecode array if available.
-  Handle<Object> maybe_original_bytecode_array =
+  Handle<HeapObject> maybe_original_bytecode_array =
       isolate_->factory()->undefined_value();
   if (shared->HasBytecodeArray()) {
     Handle<BytecodeArray> original_bytecode_array =
@@ -1901,6 +1901,7 @@ bool Debug::CanBreakAtEntry(Handle<SharedFunctionInfo> shared) {
 bool Debug::SetScriptSource(Handle<Script> script, Handle<String> source,
                             bool preview, debug::LiveEditResult* result) {
   DebugScope debug_scope(this);
+  feature_tracker()->Track(DebugFeatureTracker::kLiveEdit);
   running_live_edit_ = true;
   LiveEdit::PatchScript(isolate_, script, source, preview, result);
   running_live_edit_ = false;
@@ -1968,11 +1969,11 @@ void Debug::UpdateState() {
   if (is_active) {
     // Note that the debug context could have already been loaded to
     // bootstrap test cases.
-    isolate_->compilation_cache()->Disable();
+    isolate_->compilation_cache()->DisableScriptAndEval();
     is_active = true;
     feature_tracker()->Track(DebugFeatureTracker::kActive);
   } else {
-    isolate_->compilation_cache()->Enable();
+    isolate_->compilation_cache()->EnableScriptAndEval();
     Unload();
   }
   is_active_ = is_active;

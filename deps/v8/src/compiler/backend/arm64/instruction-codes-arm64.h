@@ -175,6 +175,7 @@ namespace compiler {
   V(Arm64F64x2ReplaceLane)                  \
   V(Arm64F64x2Abs)                          \
   V(Arm64F64x2Neg)                          \
+  V(Arm64F64x2Sqrt)                         \
   V(Arm64F64x2Add)                          \
   V(Arm64F64x2Sub)                          \
   V(Arm64F64x2Mul)                          \
@@ -185,6 +186,8 @@ namespace compiler {
   V(Arm64F64x2Ne)                           \
   V(Arm64F64x2Lt)                           \
   V(Arm64F64x2Le)                           \
+  V(Arm64F64x2Qfma)                         \
+  V(Arm64F64x2Qfms)                         \
   V(Arm64F32x4Splat)                        \
   V(Arm64F32x4ExtractLane)                  \
   V(Arm64F32x4ReplaceLane)                  \
@@ -192,6 +195,7 @@ namespace compiler {
   V(Arm64F32x4UConvertI32x4)                \
   V(Arm64F32x4Abs)                          \
   V(Arm64F32x4Neg)                          \
+  V(Arm64F32x4Sqrt)                         \
   V(Arm64F32x4RecipApprox)                  \
   V(Arm64F32x4RecipSqrtApprox)              \
   V(Arm64F32x4Add)                          \
@@ -205,6 +209,8 @@ namespace compiler {
   V(Arm64F32x4Ne)                           \
   V(Arm64F32x4Lt)                           \
   V(Arm64F32x4Le)                           \
+  V(Arm64F32x4Qfma)                         \
+  V(Arm64F32x4Qfms)                         \
   V(Arm64I64x2Splat)                        \
   V(Arm64I64x2ExtractLane)                  \
   V(Arm64I64x2ReplaceLane)                  \
@@ -213,6 +219,7 @@ namespace compiler {
   V(Arm64I64x2ShrS)                         \
   V(Arm64I64x2Add)                          \
   V(Arm64I64x2Sub)                          \
+  V(Arm64I64x2Mul)                          \
   V(Arm64I64x2Eq)                           \
   V(Arm64I64x2Ne)                           \
   V(Arm64I64x2GtS)                          \

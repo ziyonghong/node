@@ -567,7 +567,7 @@ class FeedbackMetadata : public HeapObject {
 // possibly be confused with a pointer.
 // NOLINTNEXTLINE(runtime/references) (false positive)
 STATIC_ASSERT((Name::kEmptyHashField & kHeapObjectTag) == kHeapObjectTag);
-STATIC_ASSERT(Name::kEmptyHashField == 0x3);
+STATIC_ASSERT(Name::kEmptyHashField == 0x7);
 // Verify that a set hash field will not look like a tagged object.
 STATIC_ASSERT(Name::kHashNotComputedMask == kHeapObjectTag);
 
@@ -657,7 +657,7 @@ class V8_EXPORT_PRIVATE FeedbackNexus final {
 
   bool IsCleared() const {
     InlineCacheState state = ic_state();
-    return !FLAG_use_ic || state == UNINITIALIZED || state == PREMONOMORPHIC;
+    return !FLAG_use_ic || state == UNINITIALIZED;
   }
 
   // Clear() returns true if the state of the underlying vector was changed.

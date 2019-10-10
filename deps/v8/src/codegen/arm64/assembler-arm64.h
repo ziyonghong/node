@@ -8,6 +8,7 @@
 #include <deque>
 #include <list>
 #include <map>
+#include <memory>
 #include <vector>
 
 #include "src/base/optional.h"
@@ -104,6 +105,9 @@ class Operand {
   // This returns an LSL shift (<= 4) operand as an equivalent extend operand,
   // which helps in the encoding of instructions that use the stack pointer.
   inline Operand ToExtendedRegister() const;
+
+  // Returns new Operand adapted for using with W registers.
+  inline Operand ToW() const;
 
   inline Immediate immediate() const;
   inline int64_t ImmediateValue() const;
@@ -375,7 +379,7 @@ class V8_EXPORT_PRIVATE Assembler : public AssemblerBase {
   // Instruction set functions ------------------------------------------------
 
   // Branch / Jump instructions.
-  // For branches offsets are scaled, i.e. they in instrcutions not in bytes.
+  // For branches offsets are scaled, i.e. in instructions not in bytes.
   // Branch to register.
   void br(const Register& xn);
 

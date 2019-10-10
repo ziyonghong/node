@@ -5,6 +5,7 @@
 #ifndef V8_PARSING_PREPARSER_H_
 #define V8_PARSING_PREPARSER_H_
 
+#include "src/ast/ast-value-factory.h"
 #include "src/ast/ast.h"
 #include "src/ast/scopes.h"
 #include "src/parsing/parser-base.h"
@@ -1071,9 +1072,8 @@ class PreParser : public ParserBase<PreParser> {
 
   V8_INLINE void DeclareLabel(ZonePtrList<const AstRawString>** labels,
                               ZonePtrList<const AstRawString>** own_labels,
-                              const PreParserExpression& expr) {
-    DCHECK(!parsing_module_ || !expr.AsIdentifier().IsAwait());
-    DCHECK(IsIdentifier(expr));
+                              const AstRawString* label) {
+    DCHECK(!parsing_module_ || !label->IsOneByteEqualTo("await"));
   }
 
   // TODO(nikolaos): The preparser currently does not keep track of labels.
@@ -1108,9 +1108,10 @@ class PreParser : public ParserBase<PreParser> {
 
   Variable* DeclarePrivateVariableName(const AstRawString* name,
                                        ClassScope* scope, VariableMode mode,
+                                       IsStaticFlag is_static_flag,
                                        bool* was_added) {
     DCHECK(IsConstVariableMode(mode));
-    return scope->DeclarePrivateName(name, mode, was_added);
+    return scope->DeclarePrivateName(name, mode, is_static_flag, was_added);
   }
 
   Variable* DeclareVariableName(const AstRawString* name, VariableMode mode,
@@ -1258,8 +1259,10 @@ class PreParser : public ParserBase<PreParser> {
       bool is_static, ClassInfo* class_info) {
     bool was_added;
 
-    DeclarePrivateVariableName(property_name.string_, scope,
-                               GetVariableMode(kind), &was_added);
+    DeclarePrivateVariableName(
+        property_name.string_, scope, GetVariableMode(kind),
+        is_static ? IsStaticFlag::kStatic : IsStaticFlag::kNotStatic,
+        &was_added);
     if (!was_added) {
       Scanner::Location loc(property.position(), property.position() + 1);
       ReportMessageAt(loc, MessageTemplate::kVarRedeclaration,
@@ -1321,10 +1324,6 @@ class PreParser : public ParserBase<PreParser> {
   V8_INLINE bool IsEvalOrArguments(
       const PreParserIdentifier& identifier) const {
     return identifier.IsEvalOrArguments();
-  }
-
-  V8_INLINE bool IsAwait(const PreParserIdentifier& identifier) const {
-    return identifier.IsAwait();
   }
 
   // Returns true if the expression is of type "this.foo".
@@ -1595,12 +1594,12 @@ class PreParser : public ParserBase<PreParser> {
     return PreParserExpression::StringLiteral();
   }
 
-  PreParserExpression ExpressionFromPrivateName(ClassScope* class_scope,
-                                                const PreParserIdentifier& name,
-                                                int start_position) {
+  PreParserExpression ExpressionFromPrivateName(
+      PrivateNameScopeIterator* private_name_scope,
+      const PreParserIdentifier& name, int start_position) {
     VariableProxy* proxy = factory()->ast_node_factory()->NewVariableProxy(
         name.string_, NORMAL_VARIABLE, start_position);
-    class_scope->AddUnresolvedPrivateName(proxy);
+    private_name_scope->AddUnresolvedPrivateName(proxy);
     return PreParserExpression::FromIdentifier(name);
   }
 
@@ -1640,11 +1639,11 @@ class PreParser : public ParserBase<PreParser> {
     return PreParserStatement::Jump();
   }
 
-  V8_INLINE void AddFormalParameter(
-      PreParserFormalParameters* parameters,
-      PreParserExpression& pattern,  // NOLINT(runtime/references)
-      const PreParserExpression& initializer, int initializer_end_position,
-      bool is_rest) {
+  V8_INLINE void AddFormalParameter(PreParserFormalParameters* parameters,
+                                    const PreParserExpression& pattern,
+                                    const PreParserExpression& initializer,
+                                    int initializer_end_position,
+                                    bool is_rest) {
     DeclarationScope* scope = parameters->scope;
     scope->RecordParameter(is_rest);
     parameters->UpdateArityAndFunctionLength(!initializer.IsNull(), is_rest);

@@ -6,7 +6,7 @@
 
 #include "src/base/optional.h"
 #include "src/codegen/assembler-inl.h"
-// TODO(clemensh): Remove dependences on compiler stuff.
+// TODO(clemensb): Remove dependences on compiler stuff.
 #include "src/codegen/interface-descriptors.h"
 #include "src/codegen/macro-assembler-inl.h"
 #include "src/compiler/linkage.h"
@@ -121,7 +121,7 @@ constexpr Vector<const ValueType> kSupportedTypes =
 
 class LiftoffCompiler {
  public:
-  // TODO(clemensh): Make this a template parameter.
+  // TODO(clemensb): Make this a template parameter.
   static constexpr Decoder::ValidateFlag validate = Decoder::kValidate;
 
   using Value = ValueBase;
@@ -488,7 +488,7 @@ class LiftoffCompiler {
     // Before entering a loop, spill all locals to the stack, in order to free
     // the cache registers, and to avoid unnecessarily reloading stack values
     // into registers at branches.
-    // TODO(clemensh): Come up with a better strategy here, involving
+    // TODO(clemensb): Come up with a better strategy here, involving
     // pre-analysis of the function.
     __ SpillLocals();
 
@@ -519,7 +519,7 @@ class LiftoffCompiler {
     }
 
     // Allocate the else state.
-    if_block->else_state = base::make_unique<ElseState>();
+    if_block->else_state = std::make_unique<ElseState>();
 
     // Test the condition, jump to else if zero.
     Register value = __ PopToRegister().gp();
@@ -1224,7 +1224,7 @@ class LiftoffCompiler {
     ReturnImpl(decoder);
   }
 
-  void GetLocal(FullDecoder* decoder, Value* result,
+  void LocalGet(FullDecoder* decoder, Value* result,
                 const LocalIndexImmediate<validate>& imm) {
     auto& slot = __ cache_state()->stack_state[imm.index];
     DCHECK_EQ(slot.type(), imm.type);
@@ -1245,7 +1245,7 @@ class LiftoffCompiler {
     }
   }
 
-  void SetLocalFromStackSlot(LiftoffAssembler::VarState* dst_slot,
+  void LocalSetFromStackSlot(LiftoffAssembler::VarState* dst_slot,
                              uint32_t local_index) {
     auto& state = *__ cache_state();
     ValueType type = dst_slot->type();
@@ -1266,7 +1266,7 @@ class LiftoffCompiler {
     __ cache_state()->inc_used(dst_reg);
   }
 
-  void SetLocal(uint32_t local_index, bool is_tee) {
+  void LocalSet(uint32_t local_index, bool is_tee) {
     auto& state = *__ cache_state();
     auto& source_slot = state.stack_state.back();
     auto& target_slot = state.stack_state[local_index];
@@ -1281,20 +1281,20 @@ class LiftoffCompiler {
         target_slot = source_slot;
         break;
       case kStack:
-        SetLocalFromStackSlot(&target_slot, local_index);
+        LocalSetFromStackSlot(&target_slot, local_index);
         break;
     }
     if (!is_tee) __ cache_state()->stack_state.pop_back();
   }
 
-  void SetLocal(FullDecoder* decoder, const Value& value,
+  void LocalSet(FullDecoder* decoder, const Value& value,
                 const LocalIndexImmediate<validate>& imm) {
-    SetLocal(imm.index, false);
+    LocalSet(imm.index, false);
   }
 
-  void TeeLocal(FullDecoder* decoder, const Value& value, Value* result,
+  void LocalTee(FullDecoder* decoder, const Value& value, Value* result,
                 const LocalIndexImmediate<validate>& imm) {
-    SetLocal(imm.index, true);
+    LocalSet(imm.index, true);
   }
 
   Register GetGlobalBaseAndOffset(const WasmGlobal* global,
@@ -1312,7 +1312,7 @@ class LiftoffCompiler {
     return addr;
   }
 
-  void GetGlobal(FullDecoder* decoder, Value* result,
+  void GlobalGet(FullDecoder* decoder, Value* result,
                  const GlobalIndexImmediate<validate>& imm) {
     const auto* global = &env_->module->globals[imm.index];
     if (!CheckSupportedType(decoder, kSupportedTypes, global->type, "global"))
@@ -1327,7 +1327,7 @@ class LiftoffCompiler {
     __ PushRegister(global->type, value);
   }
 
-  void SetGlobal(FullDecoder* decoder, const Value& value,
+  void GlobalSet(FullDecoder* decoder, const Value& value,
                  const GlobalIndexImmediate<validate>& imm) {
     auto* global = &env_->module->globals[imm.index];
     if (!CheckSupportedType(decoder, kSupportedTypes, global->type, "global"))

@@ -264,7 +264,7 @@ class JSReceiver : public HeapObject {
   static const int kHashMask = PropertyArray::HashField::kMask;
 
   DEFINE_FIELD_OFFSET_CONSTANTS(HeapObject::kHeaderSize,
-                                TORQUE_GENERATED_JSRECEIVER_FIELDS)
+                                TORQUE_GENERATED_JS_RECEIVER_FIELDS)
   bool HasProxyInPrototype(Isolate* isolate);
 
   V8_WARN_UNUSED_RESULT static MaybeHandle<FixedArray> GetPrivateEntries(
@@ -1120,7 +1120,7 @@ class JSFunction : public JSObject {
   static Handle<String> ToString(Handle<JSFunction> function);
 
   DEFINE_FIELD_OFFSET_CONSTANTS(JSObject::kHeaderSize,
-                                TORQUE_GENERATED_JSFUNCTION_FIELDS)
+                                TORQUE_GENERATED_JS_FUNCTION_FIELDS)
 
   static constexpr int kSizeWithoutPrototype = kPrototypeOrInitialMapOffset;
   static constexpr int kSizeWithPrototype = kSize;
@@ -1180,7 +1180,7 @@ class JSGlobalObject : public JSObject {
 
   // Layout description.
   DEFINE_FIELD_OFFSET_CONSTANTS(JSObject::kHeaderSize,
-                                TORQUE_GENERATED_JSGLOBAL_OBJECT_FIELDS)
+                                TORQUE_GENERATED_JS_GLOBAL_OBJECT_FIELDS)
 
   OBJECT_CONSTRUCTORS(JSGlobalObject, JSObject);
 };
@@ -1319,7 +1319,7 @@ class JSMessageObject : public JSObject {
   DECL_VERIFIER(JSMessageObject)
 
   DEFINE_FIELD_OFFSET_CONSTANTS(JSObject::kHeaderSize,
-                                TORQUE_GENERATED_JSMESSAGE_OBJECT_FIELDS)
+                                TORQUE_GENERATED_JS_MESSAGE_OBJECT_FIELDS)
   // TODO(v8:8989): [torque] Support marker constants.
   static const int kPointerFieldsEndOffset = kStartPositionOffset;
 
@@ -1370,25 +1370,18 @@ class JSAsyncFromSyncIterator
   TQ_OBJECT_CONSTRUCTORS(JSAsyncFromSyncIterator)
 };
 
-class JSStringIterator : public JSObject {
+class JSStringIterator
+    : public TorqueGeneratedJSStringIterator<JSStringIterator, JSObject> {
  public:
   // Dispatched behavior.
   DECL_PRINTER(JSStringIterator)
   DECL_VERIFIER(JSStringIterator)
 
-  DECL_CAST(JSStringIterator)
-
-  // [string]: the [[IteratedString]] inobject property.
-  DECL_ACCESSORS(string, String)
-
   // [index]: The [[StringIteratorNextIndex]] inobject property.
   inline int index() const;
   inline void set_index(int value);
 
-  DEFINE_FIELD_OFFSET_CONSTANTS(JSObject::kHeaderSize,
-                                TORQUE_GENERATED_JSSTRING_ITERATOR_FIELDS)
-
-  OBJECT_CONSTRUCTORS(JSStringIterator, JSObject);
+  TQ_OBJECT_CONSTRUCTORS(JSStringIterator)
 };
 
 }  // namespace internal

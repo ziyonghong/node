@@ -262,33 +262,33 @@ class WasmGraphBuildingInterface {
     BUILD(Return, nodes);
   }
 
-  void GetLocal(FullDecoder* decoder, Value* result,
+  void LocalGet(FullDecoder* decoder, Value* result,
                 const LocalIndexImmediate<validate>& imm) {
     if (!ssa_env_->locals) return;  // unreachable
     result->node = ssa_env_->locals[imm.index];
   }
 
-  void SetLocal(FullDecoder* decoder, const Value& value,
+  void LocalSet(FullDecoder* decoder, const Value& value,
                 const LocalIndexImmediate<validate>& imm) {
     if (!ssa_env_->locals) return;  // unreachable
     ssa_env_->locals[imm.index] = value.node;
   }
 
-  void TeeLocal(FullDecoder* decoder, const Value& value, Value* result,
+  void LocalTee(FullDecoder* decoder, const Value& value, Value* result,
                 const LocalIndexImmediate<validate>& imm) {
     result->node = value.node;
     if (!ssa_env_->locals) return;  // unreachable
     ssa_env_->locals[imm.index] = value.node;
   }
 
-  void GetGlobal(FullDecoder* decoder, Value* result,
+  void GlobalGet(FullDecoder* decoder, Value* result,
                  const GlobalIndexImmediate<validate>& imm) {
-    result->node = BUILD(GetGlobal, imm.index);
+    result->node = BUILD(GlobalGet, imm.index);
   }
 
-  void SetGlobal(FullDecoder* decoder, const Value& value,
+  void GlobalSet(FullDecoder* decoder, const Value& value,
                  const GlobalIndexImmediate<validate>& imm) {
-    BUILD(SetGlobal, imm.index, value.node);
+    BUILD(GlobalSet, imm.index, value.node);
   }
 
   void TableGet(FullDecoder* decoder, const Value& index, Value* result,

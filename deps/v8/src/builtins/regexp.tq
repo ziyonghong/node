@@ -22,8 +22,8 @@ namespace regexp {
     BranchIfFastRegExp_Permissive(o) otherwise return true, return false;
   }
 
-  extern macro RegExpBuiltinsAssembler::RegExpExec(Context, Object, Object):
-      Object;
+  extern macro RegExpBuiltinsAssembler::RegExpExec(Context, JSReceiver, String):
+      JSAny;
 
   extern macro
   RegExpBuiltinsAssembler::RegExpPrototypeExecBodyWithoutResultFast(
@@ -161,4 +161,20 @@ namespace regexp {
         otherwise return SlowFlagsGetter(receiver);
     return FastFlagsGetter(fastRegexp);
   }
+
+  extern transitioning macro RegExpBuiltinsAssembler::SlowLoadLastIndex(
+      implicit context: Context)(JSAny): JSAny;
+  extern transitioning macro RegExpBuiltinsAssembler::SlowStoreLastIndex(
+      implicit context: Context)(JSAny, JSAny): void;
+
+  extern macro RegExpBuiltinsAssembler::FastLoadLastIndex(JSRegExp): Smi;
+  extern macro RegExpBuiltinsAssembler::FastStoreLastIndex(JSRegExp, Smi): void;
+
+  extern builtin
+  StringIndexOf(implicit context: Context)(String, String, Smi): Smi;
+
+  extern macro
+  RegExpBuiltinsAssembler::AdvanceStringIndexFast(String, Smi, bool): Smi;
+  extern macro
+  RegExpBuiltinsAssembler::AdvanceStringIndexSlow(String, Number, bool): Smi;
 }

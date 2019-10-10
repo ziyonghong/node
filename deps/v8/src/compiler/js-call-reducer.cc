@@ -3013,12 +3013,13 @@ Reduction JSCallReducer::ReduceCallOrConstructWithArrayLikeOrSpread(
          node->opcode() == IrOpcode::kJSConstructWithArrayLike ||
          node->opcode() == IrOpcode::kJSConstructWithSpread);
 
-  // Check if {arguments_list} is an arguments object, and {node} is the only
-  // value user of {arguments_list} (except for value uses in frame states).
   Node* arguments_list = NodeProperties::GetValueInput(node, arity);
   if (arguments_list->opcode() != IrOpcode::kJSCreateArguments) {
     return NoChange();
   }
+
+  // Check if {node} is the only value user of {arguments_list} (except for
+  // value uses in frame states). If not, we give up for now.
   for (Edge edge : arguments_list->use_edges()) {
     if (!NodeProperties::IsValueEdge(edge)) continue;
     Node* const user = edge.from();
@@ -3704,7 +3705,7 @@ Reduction JSCallReducer::ReduceJSCall(Node* node,
     case Builtins::kMapIteratorPrototypeNext:
       return ReduceCollectionIteratorPrototypeNext(
           node, OrderedHashMap::kEntrySize, factory()->empty_ordered_hash_map(),
-          FIRST_MAP_ITERATOR_TYPE, LAST_MAP_ITERATOR_TYPE);
+          FIRST_JS_MAP_ITERATOR_TYPE, LAST_JS_MAP_ITERATOR_TYPE);
     case Builtins::kSetPrototypeEntries:
       return ReduceCollectionIteration(node, CollectionKind::kSet,
                                        IterationKind::kEntries);
@@ -3716,7 +3717,7 @@ Reduction JSCallReducer::ReduceJSCall(Node* node,
     case Builtins::kSetIteratorPrototypeNext:
       return ReduceCollectionIteratorPrototypeNext(
           node, OrderedHashSet::kEntrySize, factory()->empty_ordered_hash_set(),
-          FIRST_SET_ITERATOR_TYPE, LAST_SET_ITERATOR_TYPE);
+          FIRST_JS_SET_ITERATOR_TYPE, LAST_JS_SET_ITERATOR_TYPE);
     case Builtins::kDatePrototypeGetTime:
       return ReduceDatePrototypeGetTime(node);
     case Builtins::kDateNow:
@@ -5675,8 +5676,6 @@ Reduction JSCallReducer::ReducePromiseConstructor(Node* node) {
   Node* outer_frame_state = NodeProperties::GetFrameStateInput(node);
   Node* effect = NodeProperties::GetEffectInput(node);
   Node* control = NodeProperties::GetControlInput(node);
-
-  if (!FLAG_experimental_inline_promise_constructor) return NoChange();
 
   // Only handle builtins Promises, not subclasses.
   if (target != new_target) return NoChange();

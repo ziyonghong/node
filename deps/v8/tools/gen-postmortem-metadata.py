@@ -259,8 +259,6 @@ extras_accessors = [
     'JSArrayBuffer, byte_length, size_t, kByteLengthOffset',
     'JSArrayBufferView, byte_length, size_t, kByteLengthOffset',
     'JSArrayBufferView, byte_offset, size_t, kByteOffsetOffset',
-    'JSDate, value, Object, kValueOffset',
-    'JSRegExp, source, Object, kSourceOffset',
     'JSTypedArray, external_pointer, uintptr_t, kExternalPointerOffset',
     'JSTypedArray, length, Object, kLengthOffset',
     'Map, instance_size_in_words, char, kInstanceSizeInWordsOffset',
@@ -285,6 +283,7 @@ extras_accessors = [
     'Code, instruction_start, uintptr_t, kHeaderSize',
     'Code, instruction_size, int, kInstructionSizeOffset',
     'String, length, int32_t, kLengthOffset',
+    'DescriptorArray, header_size, uintptr_t, kHeaderSize',
 ];
 
 #
@@ -295,7 +294,8 @@ extras_accessors = [
 expected_classes = [
     'ConsString', 'FixedArray', 'HeapNumber', 'JSArray', 'JSFunction',
     'JSObject', 'JSRegExp', 'JSPrimitiveWrapper', 'Map', 'Oddball', 'Script',
-    'SeqOneByteString', 'SharedFunctionInfo', 'ScopeInfo', 'JSPromise'
+    'SeqOneByteString', 'SharedFunctionInfo', 'ScopeInfo', 'JSPromise',
+    'DescriptorArray'
 ];
 
 
@@ -445,10 +445,7 @@ def load_objects_from_file(objfilename, checktypes):
         # way around.
         #
         for type in types:
-                #
-                # REGEXP behaves like REG_EXP, as in JS_REGEXP_TYPE => JSRegExp.
-                #
-                usetype = re.sub('_REGEXP_', '_REG_EXP_', type);
+                usetype = type
 
                 #
                 # Remove the "_TYPE" suffix and then convert to camel case,
