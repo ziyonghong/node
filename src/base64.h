@@ -4,7 +4,6 @@
 #if defined(NODE_WANT_INTERNALS) && NODE_WANT_INTERNALS
 
 #include "util.h"
-
 #include <cstddef>
 #include <cstdint>
 
@@ -28,7 +27,6 @@ static inline size_t base64_decoded_size_fast(size_t size) {
       size += 1 + (remainder == 3);
     }
   }
-
   return size;
 }
 
